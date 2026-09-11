@@ -1,141 +1,126 @@
 # Univer Craft
 
-Univer Craft helps build Univer Apps using Tina. It researches the Univer Office
-SDK layers needed by a request and routes work to the appropriate Tina stage.
-Normal mode handles research, planning, implementation, or verification as
-requested. YOLO delegates the complete requested outcome to Tina YOLO.
+Univer Craft 帮助你在 Codex 中开发 Univer 应用：按需研究 Univer Office SDK，再调用 [Tina](https://github.com/yangluoshen/tina) 完成规划、实现或验证。
 
-New apps default to pnpm and TypeScript, with application source code in the
-project root's `src/` unless the user explicitly specifies another location.
-Existing apps retain their stack and directory conventions. The
-[SDK research map](skills/univer-craft/references/univer-sdk.md) covers Web,
-Server, and AI SDK boundaries; the skills require current, task-specific
-research before implementing unfamiliar SDK integrations.
+## 快速安装
 
-## Initialize a target
-
-Open the target repository in Codex and send:
+准备好 Git、Node.js 和 npm，在 Codex 中打开目标项目，发送：
 
 ```text
 请读取 https://raw.githubusercontent.com/dream-num/univer-craft/main/INSTALL.md，将 Univer Craft 安装到当前仓库。
 ```
 
-Append `使用 incognito 模式，保持 Git 状态不变。` for local-only installation,
-or replace `当前仓库` with an explicit path. [INSTALL.md](INSTALL.md) guides the
-agent to acquire this bundle and its pinned Tina dependency outside the target,
-then use the existing init skills with an isolated, pinned OpenSpec CLI. Git,
-Node.js, and npm are required; no preinstalled skill or global OpenSpec is needed.
-The URL requires publishing this repository and guide first; a local checkout's
-`INSTALL.md` path works before publication. Start a new Codex session afterward.
+安装会同时配置 Tina 和 Univer Craft，无需预装技能或全局 OpenSpec。完成后，**新建 Codex 会话**再使用。
 
-### Initialize from a source checkout
-
-After cloning this repository, initialize its pinned Tina dependency:
-
-```sh
-git submodule update --init vendor/tina
-```
-
-Open this repository in Codex and use the existing skill entrypoints:
+如果只想在本机使用、保持 Git 状态不变，在指令末尾加上：
 
 ```text
-$univer-craft-init /absolute/path/to/target-repository
-$univer-craft-init-incognito /absolute/path/to/target-repository
+使用 incognito 模式，保持 Git 状态不变。
 ```
 
-Both install Tina and the `univer-craft` / `univer-craft-yolo` skills, including
-the SDK research reference. The initialization skills remain in this source
-repository. OpenSpec must be available; the tested version is defined only in
-`vendor/tina/dependencies.env`. Initialization does not install global software.
+incognito 模式要求目标是 Git 工作区根目录。它使用本地 Git 排除规则，保留已跟踪文件；如果根目录 `AGENTS.md` 后续有变化，需要同步刷新由它生成的 `AGENTS.override.md`。
 
-Normal installation also has a shell entrypoint:
+也可以将“当前仓库”换成目标的绝对路径。在线指南无法访问时，可提供本地 [INSTALL.md](INSTALL.md) 的绝对路径。
 
-```sh
-./install-univer-craft.sh /absolute/path/to/target-repository
-```
+## 快速开始
 
-The installer checks both extension destinations before invoking Tina's own
-installer, then copies the Univer Craft skills. Identical content is reused;
-differing content blocks installation and remains untouched.
+在已安装的目标项目中使用：
 
-Incognito mode requires a Git worktree root. The skill stages the combined
-installation outside the target, preserves tracked content and Git status,
-and keeps Tina and Univer Craft exclusions in separate local Git exclude
-blocks. It preserves root instructions in `AGENTS.override.md`. Start a new
-Codex session after installation; refresh a derived override when the target's
-root `AGENTS.md` changes.
+| 操作 | 技能 |
+| --- | --- |
+| 研究 SDK、规划功能，或执行指定的实现、验证阶段 | `$univer-craft` |
+| 自主完成整个任务，包括规划、实现和验证 | `$univer-craft-yolo` |
 
-In the target repository, usage stays the same:
+先研究接入方案：
 
 ```text
 $univer-craft 研究现有应用接入 Univer 协同和自有权限系统需要哪些 SDK，并给出下一步指令
+```
+
+直接构建应用：
+
+```text
 $univer-craft-yolo 在这个新仓库构建支持本地编辑和保存的 Univer Sheets App
 ```
 
-## Upgrade Tina
-
-`vendor/tina` is an unmodified Git submodule of
-[Tina](https://github.com/yangluoshen/tina). This repository's gitlink pins the
-exact tested commit. Tina owns its installer, schema, agents, upstream pins,
-and workflow; Univer Craft owns its SDK guidance and combined installation.
-Tina's core workflow does not load or require Univer Craft.
-
-In this source repository, ask Codex to update and validate the dependency:
+构建在线五子棋游戏：
 
 ```text
-$univer-craft-update-dependencies
-$univer-craft-update-dependencies <Tina tag, branch, or commit>
+$univer-craft-yolo 使用 Univer Office SDK 构建在线五子棋游戏。
+
+1. 无需登录注册，输入名称、创建房间，等待玩家加入即可开始。
+2. 使用 Spreadsheet 构建棋盘。
+3. 使用 Server 协同引擎进行联机同步。
+4. 游戏结束后显示明显的弹窗，并分别向双方展示获胜或失败界面。
+5. 界面采用清新美观的浅蓝色主题。
+6. 己方和对方落子时都需要声音提示。
+7. 允许观众加入房间观战。
 ```
 
-The default is upstream `main`. The skill reviews compatibility, runs the bundle
-checks, and restores the previous checkout if the candidate fails validation.
-It preserves local edits and leaves the tested gitlink change for a parent
-commit. It does not update installed target repositories automatically.
+新项目默认使用 pnpm、TypeScript，应用代码放在根目录 `src/`；已有项目沿用原有技术栈和目录结构。普通模式按请求进入对应阶段，YOLO 模式持续推进至完成或遇到明确阻塞。
 
-The equivalent manual update starts with a clean submodule:
+## 更新与迁移
+
+以下维护技能在 **Univer Craft 源码仓库**中使用，不会安装到目标项目。
+
+### 获取源码
 
 ```sh
-git submodule update --init --remote vendor/tina
-./test.sh
-git diff --submodule=log -- vendor/tina
+git clone --recurse-submodules https://github.com/dream-num/univer-craft.git
+cd univer-craft
 ```
 
-Review the dependency diff and any changed initialization/sync contracts before
-committing the new gitlink with `git add vendor/tina`. For a selected release or
-commit, fetch in `vendor/tina` and check out that revision instead of using
-`--remote`. If validation fails, keep the old pin; `git submodule update --init
-vendor/tina` restores the recorded revision when the submodule has no local edits.
-Compatibility changes belong in Univer Craft's wrappers, never inside Tina.
+维护技能需要 OpenSpec，版本以 `vendor/tina/dependencies.env` 为准；可按 [安装指南](INSTALL.md) 的方式临时使用指定版本，无需全局安装。
 
-## Sync an existing target
+### 更新已有项目
 
-From this source repository, use:
+在干净的 Univer Craft 源码仓库中拉取更新，并检出其锁定的 Tina 版本：
+
+```sh
+git pull --ff-only
+git submodule update --init vendor/tina
+```
+
+然后在 Codex 中打开该源码仓库，发送：
 
 ```text
 $univer-craft-sync /absolute/path/to/target-repository
 ```
 
-This syncs both Univer Craft and its current Tina dependency. It detects normal
-or incognito mode, checks both components before applying changes, preserves
-target customizations, and keeps their ownership manifests and exclude blocks
-separate. Source-only init, dependency-update, and sync skills stay here.
-An update to the dependency pin does not change existing targets until sync.
+同步会一起更新 Univer Craft 和 Tina，识别并保留普通或 incognito 安装模式，保留项目自定义内容；遇到冲突时先处理冲突。已有 Tina 的项目也可用此命令补装 Univer Craft。**不要用初始化命令覆盖旧安装。**
 
-For a Tina-only update, ask Codex to follow
-[`vendor/tina/.agents/skills/tina-sync/SKILL.md`](vendor/tina/.agents/skills/tina-sync/SKILL.md)
-with that target's explicit path. It handles normal and incognito installations,
-preserves target customizations, and manages only Tina's payload. Do not rerun
-the initializer to overwrite an older installation. Preserve Univer Craft's
-exclude block during a Tina-only sync or removal.
-Univer Craft requires Tina to remain installed.
+### 安装到另一个项目
 
-## Maintenance
+在新目标项目中使用上面的快速安装指令，或在源码仓库中选择一个初始化命令：
 
-- `.agents/skills/`: source-repository init, dependency-update, and sync skills.
-- `skills/univer-craft*/`: target skills and SDK research guidance.
-- `install-univer-craft.sh`: combined installer using `vendor/tina/install.sh`.
-- `vendor/tina`: pinned Tina dependency; update through Git submodule commands.
-- `test.sh`: Tina smoke tests and combined installation compatibility checks.
+```text
+$univer-craft-init /absolute/path/to/target-repository
+```
 
-Run `./test.sh` after changing skills, installation, or the Tina pin. It requires
-Git, Node.js, and OpenSpec as specified by the pinned Tina bundle.
+仅本地安装：
+
+```text
+$univer-craft-init-incognito /absolute/path/to/target-repository
+```
+
+这些命令安装工作流和技能；应用代码与业务数据需另行迁移。
+
+### 升级 Tina 依赖（维护者）
+
+在源码仓库中发送以下指令，默认升级到 Tina 上游 `main`；也可在后面指定标签、分支或提交：
+
+```text
+$univer-craft-update-dependencies
+```
+
+技能会检查兼容性并运行 `./test.sh`，验证失败则恢复原版本。升级结果需随本仓库提交记录；已有项目需再执行 `$univer-craft-sync` 才会更新。
+
+## 开发与参考
+
+- [安装指南](INSTALL.md)：完整安装流程与前置条件。
+- [SDK 研究地图](skills/univer-craft/references/univer-sdk.md)：Web、Server 和 AI SDK 的接入范围。
+- `.agents/skills/`：本仓库的安装、同步和依赖升级技能。
+- `skills/`：安装到目标项目的技能。
+- `vendor/tina`：锁定版本的 Tina 子模块，通过 Git 升级，保持其源码不变。
+
+修改技能、安装器或 Tina 依赖后，运行 `./test.sh`。
