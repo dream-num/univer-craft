@@ -14,6 +14,22 @@ research before implementing unfamiliar SDK integrations.
 
 ## Initialize a target
 
+Open the target repository in Codex and send:
+
+```text
+请读取 https://raw.githubusercontent.com/dream-num/univer-craft/main/INSTALL.md，将 Univer Craft 安装到当前仓库。
+```
+
+Append `使用 incognito 模式，保持 Git 状态不变。` for local-only installation,
+or replace `当前仓库` with an explicit path. [INSTALL.md](INSTALL.md) guides the
+agent to acquire this bundle and its pinned Tina dependency outside the target,
+then use the existing init skills with an isolated, pinned OpenSpec CLI. Git,
+Node.js, and npm are required; no preinstalled skill or global OpenSpec is needed.
+The URL requires publishing this repository and guide first; a local checkout's
+`INSTALL.md` path works before publication. Start a new Codex session afterward.
+
+### Initialize from a source checkout
+
 After cloning this repository, initialize its pinned Tina dependency:
 
 ```sh
