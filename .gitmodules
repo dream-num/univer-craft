@@ -1,0 +1,4 @@
+[submodule "vendor/tina"]
+	path = vendor/tina
+	url = https://github.com/yangluoshen/tina.git
+	branch = main
